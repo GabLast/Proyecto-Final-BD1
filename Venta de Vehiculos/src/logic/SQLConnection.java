@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 public class SQLConnection {
 
-	public static Connection dbConnection() {
+	public static Connection connect() {
 
 		Connection dbSQL = null;
 
@@ -14,7 +14,10 @@ public class SQLConnection {
 
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-			String dbURL = "jdbc:sqlserver://localhost:1433;databaseName=VentaVehiculos;user=gab;password=123";
+			String dbURL = "jdbc:sqlserver://10.0.0.15;databaseName=VentaVehiculos;user=gab;password=123";
+			
+
+
 
 			dbSQL = DriverManager.getConnection(dbURL);
 
