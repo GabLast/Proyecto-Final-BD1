@@ -190,6 +190,9 @@ public class MainLogIn extends JFrame {
 		JButton btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				RegistroUser window = new RegistroUser(dbConnection);
+				window.setVisible(true);
+				window.setModal(true);
 			}
 		});
 		btnRegistrarse.setFont(new Font("Dialog", Font.PLAIN, 12));
