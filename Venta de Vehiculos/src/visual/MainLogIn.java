@@ -236,10 +236,10 @@ public class MainLogIn extends JFrame {
 							else if(tipoUser.equalsIgnoreCase("Cliente"))
 							{
 								query.close();
-								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainCliente window = new MainCliente(dbConnection);
-								dispose();
-								window.setVisible(true);
+								//JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+								//MainCliente window = new MainCliente(dbConnection);
+								//dispose();
+								//window.setVisible(true);
 							}
 							else
 								JOptionPane.showMessageDialog(null, "Tipo de usuario no válido", "Error", JOptionPane.WARNING_MESSAGE, null);

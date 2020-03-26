@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import logic.SQLConnection;
 import logic.User;
 
 import javax.swing.JComboBox;
@@ -104,7 +105,7 @@ public class RegistroUser extends JDialog {
 				else
 				{
 					User user = new User(cbxTipoUser.getSelectedItem().toString(), txtUsername.getText(), String.copyValueOf(passwordField.getPassword()));
-					System.out.println(user.getTipo());
+					//System.out.println(user.getTipo());
 					if(user.getTipo().equalsIgnoreCase("Administrador"))
 					{
 						user.setTipo("00");
@@ -119,17 +120,22 @@ public class RegistroUser extends JDialog {
 					{
 						JOptionPane.showMessageDialog(null, "Tipo de usuario no válido", "Error", JOptionPane.WARNING_MESSAGE, null);
 					}
-					
+					//System.out.println(user.getTipo());
 					try
 					{
-						String consulta = String.format("exec insertarUsuario @signid = %s, @tipo = %s, @clave = %s", user.getUserName(), user.getTipo(), user.getPass());
-						dbConnection.prepareCall(consulta).execute();
+						
+						String insert = String.format("exec insertarUsuario @signid = '%s', @tipo = '%s', @clave = '%s';", user.getUserName(), user.getTipo(), user.getPass());
+						dbConnection.prepareCall(insert).execute();
+						JOptionPane.showMessageDialog(null, "Usuario Registrado Satisfactoriamente", null, JOptionPane.INFORMATION_MESSAGE, null);
+						dispose();
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						
 						e1.printStackTrace();
 						
 					}
+					
+					
 					
 				}
 				
