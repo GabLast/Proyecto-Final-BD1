@@ -18,7 +18,6 @@ public class Persona {
 		this.cedula = cedula;
 		this.nombre = nombre;
 		this.apellido = apellido;
-		numeros = new ArrayList<String>();
 		this.provincia = provincia;
 		this.email = email;
 	}
