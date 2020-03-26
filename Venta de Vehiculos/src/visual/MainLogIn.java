@@ -141,16 +141,18 @@ public class MainLogIn extends JFrame {
 						}
 					}
 
-					query.close();
 
 					if(!userExists)
 					{
 						JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrecto", "Error", JOptionPane.WARNING_MESSAGE, null);
+						
 					}
 
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
+					
 					e1.printStackTrace();
+					
 				}
 			}
 		});
@@ -163,7 +165,7 @@ public class MainLogIn extends JFrame {
 		lblNewLabel.setBounds(59, 195, 158, 14);
 		panel.add(lblNewLabel);
 
-		JLabel lblAqui = new JLabel("aqui");
+		JLabel lblAqui = new JLabel("aqu\u00ED");
 		lblAqui.setFont(new Font("Roboto", Font.PLAIN, 12));
 		lblAqui.addMouseListener(new MouseAdapter() {
 			@Override
@@ -180,7 +182,7 @@ public class MainLogIn extends JFrame {
 		lblPlanificadoraDeEventos.setBounds(115, 11, 252, 68);
 		panel.add(lblPlanificadoraDeEventos);
 
-		JLabel lblRegistrarse = new JLabel("Para registrarse, click aqu\u00ED");
+		JLabel lblRegistrarse = new JLabel("Para registrarse:");
 		lblRegistrarse.setFont(new Font("Dialog", Font.PLAIN, 12));
 		lblRegistrarse.setBounds(59, 237, 204, 14);
 		panel.add(lblRegistrarse);
@@ -241,8 +243,6 @@ public class MainLogIn extends JFrame {
 						}
 					}
 
-					query.close();
-
 					if(!userExists)
 					{
 						JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrecto", "Error", JOptionPane.WARNING_MESSAGE, null);
@@ -250,6 +250,7 @@ public class MainLogIn extends JFrame {
 
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrecto", "Error", JOptionPane.WARNING_MESSAGE, null);
 					e1.printStackTrace();
 				}
 			}

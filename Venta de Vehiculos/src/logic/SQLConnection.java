@@ -28,19 +28,19 @@ public class SQLConnection {
 		} catch (Exception e) {
 			System.out.println("Failed Connection");
 			return null;
-		} finally 
-		{
-			try 
-			{
-				if (dbSQL != null && !dbSQL.isClosed()) 
-				{
-					dbSQL.close();
-				}
-			} catch (SQLException ex) 
-			{
-				ex.printStackTrace();
-			}
-		}
+		} //finally 
+//		{
+//			try 
+//			{
+//				if (dbSQL != null && !dbSQL.isClosed()) 
+//				{
+//					dbSQL.close();
+//				}
+//			} catch (SQLException ex) 
+//			{
+//				ex.printStackTrace();
+//			}
+//		}
 	}
 
 }
