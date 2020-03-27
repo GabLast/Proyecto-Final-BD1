@@ -149,44 +149,45 @@ public class RegistroUser extends JDialog {
 					//System.out.println(user.getTipo());
 					if(cbxTipoCuenta.getSelectedItem().toString().equalsIgnoreCase("Cliente"))
 					{
-						Cliente client = new Cliente(txtCedula.getText(), txtNombre.getText(), txtApellido.getText(), String.valueOf(cbxProvincia.getSelectedIndex()), txtMail.getText());
+						Cliente client = new Cliente(txtCedula.getText(), txtNombre.getText(), txtApellido.getText(), String.valueOf(cbxProvincia.getSelectedIndex()+1), txtMail.getText());
 						String numero = txtNumber1.getText();
+						String insert = String.format("exec registrarCliente @usuario = '%s', @tipoUser = '%s', @clave = '%s', @cedula = '%s', @nombre = '%s', "
+								+ "@apellido = '%s', @provincia = '%s', @email = '%s', @numero = '%s'", user.getUserName(), user.getTipo(), user.getPass(),
+								client.getCedula(), client.getNombre(), client.getApellido(), client.getProvincia(), client.getEmail(), numero);
 						try
 						{
-							
-							String insert = String.format("exec registrarCliente @usuario = '%s', @tipoUser = '%s', @clave = '%s', @cedula = '%s', @nombre = '%s', "
-									+ "@apellido = '%s', @provincia = '%s', @email = '%s', @numero = '%s'", user.getUserName(), user.getTipo(), user.getPass(),
-									client.getCedula(), client.getNombre(), client.getApellido(), client.getProvincia(), client.getEmail(), numero);
 							dbConnection.prepareCall(insert).execute();
-							JOptionPane.showMessageDialog(null, "Usuario Registrado Satisfactoriamente", null, JOptionPane.INFORMATION_MESSAGE, null);
-							dispose();
 						} catch (SQLException e1) {
 							// TODO Auto-generated catch block
 							
 							e1.printStackTrace();
 							
 						}
+						
+						JOptionPane.showMessageDialog(null, "Se ha registrado correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+						dispose();
 					}
 					else if(cbxTipoCuenta.getSelectedItem().toString().equalsIgnoreCase("Vendedor"))
 					{
-						Vendedor vendedor = new Vendedor(txtCedula.getText(), txtNombre.getText(), txtApellido.getText(), String.valueOf(cbxProvincia.getSelectedIndex()), 
+						Vendedor vendedor = new Vendedor(txtCedula.getText(), txtNombre.getText(), txtApellido.getText(), String.valueOf(cbxProvincia.getSelectedIndex()+1), 
 								txtMail.getText(), cbxTipoVendedor.getSelectedItem().toString());
 						String numero = txtNumber1.getText();
+						String insert = String.format("exec registrarVendedor @usuario = '%s', @tipoUser = '%s', @clave = '%s', @cedula = '%s', @nombre = '%s', "
+								+ "@apellido = '%s', @provincia = '%s', @email = '%s', @numero = '%s', @tipoVendedor = '%s'", user.getUserName(), user.getTipo(), user.getPass(),
+								vendedor.getCedula(), vendedor.getNombre(), vendedor.getApellido(), vendedor.getProvincia(), vendedor.getEmail(), numero, vendedor.getTipoVendedor());
 						try
 						{
-							
-							String insert = String.format("exec registrarCliente @usuario = '%s', @tipoUser = '%s', @clave = '%s', @cedula = '%s', @nombre = '%s', "
-									+ "@apellido = '%s', @provincia = '%s', @email = '%s', @numero = '%s', @tipoVendedor = '%s'", user.getUserName(), user.getTipo(), user.getPass(),
-									vendedor.getCedula(), vendedor.getNombre(), vendedor.getApellido(), vendedor.getProvincia(), vendedor.getEmail(), numero, vendedor.getTipoVendedor());
 							dbConnection.prepareCall(insert).execute();
-							JOptionPane.showMessageDialog(null, "Usuario Registrado Satisfactoriamente", null, JOptionPane.INFORMATION_MESSAGE, null);
-							dispose();
+							
 						} catch (SQLException e1) {
 							// TODO Auto-generated catch block
 							
 							e1.printStackTrace();
 							
 						}
+						
+						JOptionPane.showMessageDialog(null, "Se ha registrado correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+						dispose();
 					}
 
 				}

@@ -8,7 +8,6 @@ public class Persona {
 	private String cedula;
 	private String nombre;
 	private String apellido;
-	private ArrayList<String> numeros;
 	private String provincia;
 	private String email;
 	
@@ -18,7 +17,7 @@ public class Persona {
 		this.cedula = cedula;
 		this.nombre = nombre;
 		this.apellido = apellido;
-		this.provincia = provincia;
+		this.provincia = provincia;		
 		this.email = email;
 	}
 
@@ -44,14 +43,6 @@ public class Persona {
 
 	public void setApellido(String apellido) {
 		this.apellido = apellido;
-	}
-
-	public ArrayList<String> getNumeros() {
-		return numeros;
-	}
-
-	public void setNumeros(ArrayList<String> numeros) {
-		this.numeros = numeros;
 	}
 
 	public String getProvincia() {

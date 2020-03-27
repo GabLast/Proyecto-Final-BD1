@@ -101,7 +101,7 @@ public class MainLogIn extends JFrame {
 				try
 				{
 					Statement statement = dbConnection.createStatement();
-					ResultSet query = statement.executeQuery("select u.signId, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
+					ResultSet query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
 
 
 					while(query.next() && !userExists)
@@ -192,7 +192,7 @@ public class MainLogIn extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				RegistroUser window = new RegistroUser(dbConnection);
 				window.setVisible(true);
-				window.setModal(true);
+				//window.setModal(true);
 			}
 		});
 		btnRegistrarse.setFont(new Font("Dialog", Font.PLAIN, 12));
