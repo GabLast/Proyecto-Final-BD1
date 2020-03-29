@@ -230,6 +230,7 @@ public class MainLogIn extends JFrame {
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
 								MainVendedor window = new MainVendedor(user);
+								dbConnection.close();
 								dispose();
 								window.setVisible(true);
 							}
