@@ -39,14 +39,14 @@ public class RegistrarVehiculo extends JDialog {
 	JTextArea txtDescripcion;
 	JComboBox cbxEstado;
 	int idModelo = -1;
-	int idVendedor = -1;
+
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
 		try {
-			RegistrarVehiculo dialog = new RegistrarVehiculo(null, null);
+			RegistrarVehiculo dialog = new RegistrarVehiculo(null, -1);
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -57,7 +57,7 @@ public class RegistrarVehiculo extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarVehiculo(Connection dbConnection, String user) {
+	public RegistrarVehiculo(Connection dbConnection, int idVendedor) {
 		setTitle("Registrando un Veh\u00EDculo");
 		setBounds(100, 100, 445, 446);
 		setLocationRelativeTo(null);
@@ -235,23 +235,7 @@ public class RegistrarVehiculo extends JDialog {
 								e5.printStackTrace();
 							}
 							
-							String buscarVendedor = String.format("select u.usuario, p.idPersona, v.idVendedor from Persona p join Users u on p.idPersona = "
-									+ "u.idPersona join Vendedor v on v.idPersona = p.idPersona where u.usuario = '%s'", user);
-							try {
-								Statement st2;
-								st2 = dbConnection.createStatement();
-								ResultSet rs3 = st2.executeQuery(buscarVendedor);
-								
-								while(rs3.next() && idVendedor == -1)
-								{
-									idVendedor = Integer.valueOf(rs3.getString(3));
-								}
-								
-								rs3.close();
-							} catch (SQLException e5) {
-								// TODO Auto-generated catch block
-								e5.printStackTrace();
-							}
+							
 							
 							if(idModelo != -1 && idVendedor != -1)
 							{

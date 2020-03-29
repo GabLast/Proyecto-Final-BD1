@@ -3,6 +3,9 @@ package visual;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,7 +24,8 @@ public class MainVendedor extends JFrame {
 
 	private JPanel contentPane;
 	Connection dbConnection = null;
-
+	int idVendedor = -1;
+	String nombre = null;
 	/**
 	 * Launch the application.
 	 */
@@ -48,6 +52,26 @@ public class MainVendedor extends JFrame {
 	 */
 	public MainVendedor(String user) {
 		dbConnection = SQLConnection.connect();
+		
+		String buscarVendedor = String.format("select u.usuario, p.idPersona, v.idVendedor, p.nombre from Persona p join Users u on p.idPersona = "
+				+ "u.idPersona join Vendedor v on v.idPersona = p.idPersona where u.usuario = '%s'", user);
+		try {
+			Statement st2;
+			st2 = dbConnection.createStatement();
+			ResultSet rs3 = st2.executeQuery(buscarVendedor);
+			
+			while(rs3.next() && idVendedor == -1)
+			{
+				idVendedor = Integer.valueOf(rs3.getString(3));
+				nombre = rs3.getString(4);
+			}
+			
+			rs3.close();
+		} catch (SQLException e5) {
+			// TODO Auto-generated catch block
+			e5.printStackTrace();
+		}
+		
 		setTitle("Ventana del vendedor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 762, 494);
@@ -62,12 +86,17 @@ public class MainVendedor extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Registrar Veh\u00EDculo");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new RegistrarVehiculo(dbConnection, user).setVisible(true);
+				new RegistrarVehiculo(dbConnection, idVendedor).setVisible(true);
 			}
 		});
 		mnVehiculos.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Listado de Veh\u00EDculos");
+		mntmNewMenuItem_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		mnVehiculos.add(mntmNewMenuItem_2);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
