@@ -124,7 +124,7 @@ public class MainLogIn extends JFrame {
 							{
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainVendedor window = new MainVendedor(dbConnection);
+								MainVendedor window = new MainVendedor(user);
 								dispose();
 								window.setVisible(true);
 							}
@@ -229,26 +229,28 @@ public class MainLogIn extends JFrame {
 							{
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainVendedor window = new MainVendedor(dbConnection);
+								MainVendedor window = new MainVendedor(user);
 								dispose();
 								window.setVisible(true);
 							}
 							else if(tipoUser.equalsIgnoreCase("Cliente"))
 							{
 								query.close();
-								//JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								//MainCliente window = new MainCliente(dbConnection);
-								//dispose();
-								//window.setVisible(true);
+								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+								MainCliente window = new MainCliente(dbConnection);
+								dispose();
+								window.setVisible(true);
 							}
 							else
 								JOptionPane.showMessageDialog(null, "Tipo de usuario no válido", "Error", JOptionPane.WARNING_MESSAGE, null);
 						}
 					}
 
+
 					if(!userExists)
 					{
 						JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrecto", "Error", JOptionPane.WARNING_MESSAGE, null);
+						
 					}
 
 				} catch (SQLException e1) {
