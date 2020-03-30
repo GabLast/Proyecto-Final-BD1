@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
+import javax.swing.JDialog;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -29,7 +29,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.Font;
 
-public class MainLogIn extends JFrame {
+public class MainLogIn extends JDialog {
 
 	private JPanel contentPane;
 	private JTextField txtUsuario;
@@ -41,31 +41,24 @@ public class MainLogIn extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-				try {
-					MainLogIn frame = new MainLogIn();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		try {
+			MainLogIn frame = new MainLogIn();
+			frame.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
-
-	/**
-	 * Create the frame.
-	 */
+	
+	
 	public MainLogIn() {
 		dbConnection = SQLConnection.connect();
 		setResizable(false);
 		setTitle("Iniciando sesi\u00F3n");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 474, 320);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
@@ -115,7 +108,7 @@ public class MainLogIn extends JFrame {
 							{
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainAdmin window = new MainAdmin(dbConnection);
+								MainAdmin window = new MainAdmin(user);
 								dispose();
 								window.setVisible(true);
 
@@ -125,8 +118,8 @@ public class MainLogIn extends JFrame {
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
 								MainVendedor window = new MainVendedor(user);
-								dispose();
 								window.setVisible(true);
+								dispose();
 							}
 							else if(tipoUser.equalsIgnoreCase("Cliente"))
 							{
@@ -206,7 +199,7 @@ public class MainLogIn extends JFrame {
 				try
 				{
 					Statement statement = dbConnection.createStatement();
-					ResultSet query = statement.executeQuery("select u.signId, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
+					ResultSet query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
 
 
 					while(query.next() && !userExists)
@@ -220,7 +213,7 @@ public class MainLogIn extends JFrame {
 							{
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainAdmin window = new MainAdmin(dbConnection);
+								MainAdmin window = new MainAdmin(user);
 								dispose();
 								window.setVisible(true);
 
@@ -230,7 +223,6 @@ public class MainLogIn extends JFrame {
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
 								MainVendedor window = new MainVendedor(user);
-								dbConnection.close();
 								dispose();
 								window.setVisible(true);
 							}
@@ -256,8 +248,9 @@ public class MainLogIn extends JFrame {
 
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
-					JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrecto", "Error", JOptionPane.WARNING_MESSAGE, null);
+					
 					e1.printStackTrace();
+					
 				}
 			}
 		});

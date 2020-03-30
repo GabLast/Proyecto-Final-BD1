@@ -1,6 +1,7 @@
 package logic;
 
 import java.sql.*;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -15,9 +16,6 @@ public class SQLConnection {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
 			String dbURL = "jdbc:sqlserver://10.0.0.15;databaseName=VentaVehiculos;user=gab;password=123";
-
-
-
 
 			dbSQL = DriverManager.getConnection(dbURL);
 

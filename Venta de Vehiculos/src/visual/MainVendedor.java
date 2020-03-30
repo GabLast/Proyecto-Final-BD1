@@ -86,7 +86,8 @@ public class MainVendedor extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Registrar Veh\u00EDculo");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				new RegistrarVehiculo(dbConnection, idVendedor).setVisible(true);
+				RegistrarVehiculo window = new RegistrarVehiculo(dbConnection, idVendedor);
+				window.setVisible(true);
 			}
 		});
 		mnVehiculos.add(mntmNewMenuItem);
@@ -94,10 +95,18 @@ public class MainVendedor extends JFrame {
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Listado de Veh\u00EDculos");
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
+				new ListarVehiculos(dbConnection, idVendedor, nombre).setVisible(true);
 			}
 		});
 		mnVehiculos.add(mntmNewMenuItem_2);
+		
+		JMenuItem mntmListadoDeAnuncios = new JMenuItem("Listado de Anuncios");
+		mntmListadoDeAnuncios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ListarAnuncios(dbConnection, idVendedor).setVisible(true);
+			}
+		});
+		mnVehiculos.add(mntmListadoDeAnuncios);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
