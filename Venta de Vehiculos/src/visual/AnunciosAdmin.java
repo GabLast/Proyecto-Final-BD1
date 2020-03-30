@@ -125,31 +125,31 @@ public class AnunciosAdmin extends JDialog {
 						}
 						else
 						{
-							String query = String.format("select idvehiculo from anuncio where idAnuncio = '%d'", idAnuncio);
+//							String query = String.format("select idvehiculo from anuncio where idAnuncio = '%d'", idAnuncio);
+//							
+//							try {
+//								Statement st;
+//								st = dbConnection.createStatement();
+//								ResultSet rs = st.executeQuery(query);
+//								
+//								while(rs.next() && idVehiculo == -1)
+//								{
+//									idVehiculo = Integer.valueOf(rs.getString(1));
+//								}
+//								
+//								rs.close();
+//							} catch (SQLException e5) {
+//								// TODO Auto-generated catch block
+//								e5.printStackTrace();
+//							}
 							
-							try {
-								Statement st;
-								st = dbConnection.createStatement();
-								ResultSet rs = st.executeQuery(query);
-								
-								while(rs.next() && idVehiculo == -1)
-								{
-									idVehiculo = Integer.valueOf(rs.getString(1));
-								}
-								
-								rs.close();
-							} catch (SQLException e5) {
-								// TODO Auto-generated catch block
-								e5.printStackTrace();
-							}
-							
-							if(idVehiculo == -1)
-							{
-								JOptionPane.showMessageDialog(null, "El vehículo no existe", "Error", JOptionPane.WARNING_MESSAGE, null);
-							}
-							else
-							{
-								String sp = String.format("exec autorizarAnuncio @idAnuncio = '%d', @idVehiculo = '%d'", idAnuncio, idVehiculo);
+//							if(idVehiculo == -1)
+//							{
+//								JOptionPane.showMessageDialog(null, "El vehículo no existe", "Error", JOptionPane.WARNING_MESSAGE, null);
+//							}
+//							else
+//							{
+								String sp = String.format("exec autorizarAnuncio @idAnuncio = %d", idAnuncio);
 								
 								try
 								{
@@ -163,7 +163,7 @@ public class AnunciosAdmin extends JDialog {
 								}
 								
 								JOptionPane.showMessageDialog(null, "El anuncio ha sido autorizado correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-							}		
+//							}		
 						}
 					}
 				});
