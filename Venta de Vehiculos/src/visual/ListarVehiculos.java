@@ -80,7 +80,7 @@ public class ListarVehiculos extends JDialog {
 						@Override
 						public void mouseClicked(MouseEvent arg0) {
 							if(table.getSelectedRow()>=0) {
-								indiceVehiculo = (table.getSelectedRow() + 1);
+								indiceVehiculo = (int) (table.getValueAt(table.getSelectedRow(), 0));
 								btnAnuncio.setEnabled(true);
 							}
 						}
