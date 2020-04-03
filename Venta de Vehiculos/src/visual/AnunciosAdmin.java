@@ -54,7 +54,7 @@ public class AnunciosAdmin extends JDialog {
 	 * Create the dialog.
 	 */
 	public AnunciosAdmin(Connection dbConnection) {
-		setTitle("Mis Anuncios");
+		setTitle("Anuncios Disponibles");
 		setBounds(100, 100, 1100, 610);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -77,7 +77,7 @@ public class AnunciosAdmin extends JDialog {
 						@Override
 						public void mouseClicked(MouseEvent arg0) {
 							if(table.getSelectedRow()>=0) {
-								idAnuncio = (table.getSelectedRow() + 1);
+								idAnuncio = (int) (table.getValueAt(table.getSelectedRow(), 0));
 								btnAutorizar.setEnabled(true);
 							}
 						}

@@ -125,7 +125,7 @@ public class MainLogIn extends JDialog {
 							{
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainCliente window = new MainCliente(dbConnection);
+								MainCliente window = new MainCliente(user);
 								dispose();
 								window.setVisible(true);
 							}
@@ -230,7 +230,7 @@ public class MainLogIn extends JDialog {
 							{
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainCliente window = new MainCliente(dbConnection);
+								MainCliente window = new MainCliente(user);
 								dispose();
 								window.setVisible(true);
 							}
