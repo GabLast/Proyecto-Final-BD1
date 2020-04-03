@@ -93,6 +93,8 @@ public class MainLogIn extends JDialog {
 
 				try
 				{
+					if(dbConnection.isClosed())
+						dbConnection = SQLConnection.connect();
 					Statement statement = dbConnection.createStatement();
 					ResultSet query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
 
@@ -145,7 +147,12 @@ public class MainLogIn extends JDialog {
 					// TODO Auto-generated catch block
 					
 					e1.printStackTrace();
-					
+					try {
+						dbConnection.close();
+					} catch (SQLException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 				}
 			}
 		});
@@ -183,9 +190,7 @@ public class MainLogIn extends JDialog {
 		JButton btnRegistrarse = new JButton("Registrarse");
 		btnRegistrarse.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				RegistroUser window = new RegistroUser(dbConnection);
-				window.setVisible(true);
-				//window.setModal(true);
+				new RegistroUser(dbConnection).setVisible(true);
 			}
 		});
 		btnRegistrarse.setFont(new Font("Dialog", Font.PLAIN, 12));
@@ -198,6 +203,8 @@ public class MainLogIn extends JDialog {
 
 				try
 				{
+					if(dbConnection.isClosed())
+						dbConnection = SQLConnection.connect();
 					Statement statement = dbConnection.createStatement();
 					ResultSet query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
 
@@ -250,7 +257,13 @@ public class MainLogIn extends JDialog {
 					// TODO Auto-generated catch block
 					
 					e1.printStackTrace();
-					
+					try {
+						dbConnection.close();
+						
+					} catch (SQLException e2) {
+						// TODO Auto-generated catch block
+						e2.printStackTrace();
+					}
 				}
 			}
 		});

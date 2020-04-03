@@ -168,6 +168,7 @@ public class AnunciosAdmin extends JDialog {
 					}
 				});
 				btnAutorizar.setActionCommand("OK");
+				btnAutorizar.setEnabled(false);
 				buttonPane.add(btnAutorizar);
 			}
 		}
