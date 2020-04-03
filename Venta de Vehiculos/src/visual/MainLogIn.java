@@ -96,47 +96,60 @@ public class MainLogIn extends JDialog {
 					if(dbConnection.isClosed())
 						dbConnection = SQLConnection.connect();
 					Statement statement = dbConnection.createStatement();
-					ResultSet query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
-
-
-					while(query.next() && !userExists)
+					ResultSet query = null;
+					
+					try
 					{
-						if(user.equalsIgnoreCase(query.getString(1)) && password.equals(query.getString(3)))
+						query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
+
+
+						while(query.next() && !userExists)
 						{
-							userExists = true;
-							tipoUser = query.getString(2);
+							if(user.equalsIgnoreCase(query.getString(1)) && password.equals(query.getString(3)))
+							{
+								userExists = true;
+								tipoUser = query.getString(2);
 
-							if(tipoUser.equalsIgnoreCase("Administrador"))
-							{
-								query.close();
-								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainAdmin window = new MainAdmin(user);
-								dispose();
-								window.setVisible(true);
+								if(tipoUser.equalsIgnoreCase("Administrador"))
+								{
+									//query.close();
+									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+									MainAdmin window = new MainAdmin(user);
+									dispose();
+									window.setVisible(true);
 
+								}
+								else if(tipoUser.equalsIgnoreCase("Vendedor"))
+								{
+									//query.close();
+									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+									MainVendedor window = new MainVendedor(user);
+									window.setVisible(true);
+									dispose();
+								}
+								else if(tipoUser.equalsIgnoreCase("Cliente"))
+								{
+									//query.close();
+									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+									MainCliente window = new MainCliente(user);
+									dispose();
+									window.setVisible(true);
+								}
+								else
+									JOptionPane.showMessageDialog(null, "Tipo de usuario no válido", "Error", JOptionPane.WARNING_MESSAGE, null);
 							}
-							else if(tipoUser.equalsIgnoreCase("Vendedor"))
-							{
-								query.close();
-								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainVendedor window = new MainVendedor(user);
-								window.setVisible(true);
-								dispose();
-							}
-							else if(tipoUser.equalsIgnoreCase("Cliente"))
-							{
-								query.close();
-								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainCliente window = new MainCliente(user);
-								dispose();
-								window.setVisible(true);
-							}
-							else
-								JOptionPane.showMessageDialog(null, "Tipo de usuario no válido", "Error", JOptionPane.WARNING_MESSAGE, null);
 						}
+					}catch (SQLException a) 
+					{
+			            a.printStackTrace();
+
+					}finally
+					{
+						statement.close();
+						query.close();
+						dbConnection.close();
 					}
-
-
+					
 					if(!userExists)
 					{
 						JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrecto", "Error", JOptionPane.WARNING_MESSAGE, null);
@@ -206,47 +219,60 @@ public class MainLogIn extends JDialog {
 					if(dbConnection.isClosed())
 						dbConnection = SQLConnection.connect();
 					Statement statement = dbConnection.createStatement();
-					ResultSet query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
-
-
-					while(query.next() && !userExists)
+					ResultSet query = null;
+					
+					try
 					{
-						if(user.equalsIgnoreCase(query.getString(1)) && password.equals(query.getString(3)))
+						query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
+
+
+						while(query.next() && !userExists)
 						{
-							userExists = true;
-							tipoUser = query.getString(2);
+							if(user.equalsIgnoreCase(query.getString(1)) && password.equals(query.getString(3)))
+							{
+								userExists = true;
+								tipoUser = query.getString(2);
 
-							if(tipoUser.equalsIgnoreCase("Administrador"))
-							{
-								query.close();
-								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainAdmin window = new MainAdmin(user);
-								dispose();
-								window.setVisible(true);
+								if(tipoUser.equalsIgnoreCase("Administrador"))
+								{
+									//query.close();
+									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+									MainAdmin window = new MainAdmin(user);
+									dispose();
+									window.setVisible(true);
 
+								}
+								else if(tipoUser.equalsIgnoreCase("Vendedor"))
+								{
+									//query.close();
+									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+									MainVendedor window = new MainVendedor(user);
+									window.setVisible(true);
+									dispose();
+								}
+								else if(tipoUser.equalsIgnoreCase("Cliente"))
+								{
+									//query.close();
+									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
+									MainCliente window = new MainCliente(user);
+									dispose();
+									window.setVisible(true);
+								}
+								else
+									JOptionPane.showMessageDialog(null, "Tipo de usuario no válido", "Error", JOptionPane.WARNING_MESSAGE, null);
 							}
-							else if(tipoUser.equalsIgnoreCase("Vendedor"))
-							{
-								query.close();
-								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainVendedor window = new MainVendedor(user);
-								window.setVisible(true);
-								dispose();
-							}
-							else if(tipoUser.equalsIgnoreCase("Cliente"))
-							{
-								query.close();
-								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-								MainCliente window = new MainCliente(user);
-								dispose();
-								window.setVisible(true);
-							}
-							else
-								JOptionPane.showMessageDialog(null, "Tipo de usuario no válido", "Error", JOptionPane.WARNING_MESSAGE, null);
 						}
+					}catch (SQLException a) 
+					{
+			            a.printStackTrace();
+
+					}finally
+					{
+						statement.close();
+						query.close();
+						dbConnection.close();
 					}
-
-
+					
 					if(!userExists)
 					{
 						JOptionPane.showMessageDialog(null, "Nombre de usuario o contraseña incorrecto", "Error", JOptionPane.WARNING_MESSAGE, null);
@@ -259,7 +285,6 @@ public class MainLogIn extends JDialog {
 					e1.printStackTrace();
 					try {
 						dbConnection.close();
-						
 					} catch (SQLException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();

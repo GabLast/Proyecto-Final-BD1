@@ -1,9 +1,8 @@
 package logic;
 
 import java.sql.*;
-import java.util.Date;
 
-import javax.swing.JOptionPane;
+
 
 public class SQLConnection {
 
@@ -19,7 +18,7 @@ public class SQLConnection {
 
 			dbSQL = DriverManager.getConnection(dbURL);
 
-			System.out.println("Connection Succeeded");
+			//System.out.println("Connection Succeeded");
 
 			return dbSQL;
 

@@ -100,13 +100,16 @@ public class MainVendedor extends JFrame {
 		});
 		mnVehiculos.add(mntmNewMenuItem_2);
 		
-		JMenuItem mntmListadoDeAnuncios = new JMenuItem("Listado de Anuncios");
+		JMenu mnNewMenu = new JMenu("Anuncios");
+		menuBar.add(mnNewMenu);
+		
+		JMenuItem mntmListadoDeAnuncios = new JMenuItem("Mis Anuncios Publicados");
+		mnNewMenu.add(mntmListadoDeAnuncios);
 		mntmListadoDeAnuncios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new ListarAnuncios(dbConnection, idVendedor).setVisible(true);
 			}
 		});
-		mnVehiculos.add(mntmListadoDeAnuncios);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
