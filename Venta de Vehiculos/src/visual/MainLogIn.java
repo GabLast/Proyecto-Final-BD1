@@ -223,8 +223,8 @@ public class MainLogIn extends JDialog {
 								query.close();
 								JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
 								MainVendedor window = new MainVendedor(user);
-								dispose();
 								window.setVisible(true);
+								dispose();
 							}
 							else if(tipoUser.equalsIgnoreCase("Cliente"))
 							{
