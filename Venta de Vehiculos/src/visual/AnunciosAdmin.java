@@ -30,6 +30,7 @@ public class AnunciosAdmin extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	JButton btnAutorizar;
+	JButton btnBorrar;
 	long idAnuncio = -1;
 
 	/**
@@ -69,6 +70,7 @@ public class AnunciosAdmin extends JDialog {
 							if(table.getSelectedRow()>=0) {
 								idAnuncio = (long) (table.getValueAt(table.getSelectedRow(), 0));
 								btnAutorizar.setEnabled(true);
+								btnBorrar.setEnabled(true);
 							}
 						}
 					});
@@ -168,6 +170,36 @@ public class AnunciosAdmin extends JDialog {
 						}
 					}
 				});
+				{
+					btnBorrar = new JButton("Borrar");
+					btnBorrar.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							
+							if(idAnuncio == -1)
+							{
+								JOptionPane.showMessageDialog(null, "Elija anuncio a borrarr", "Error", JOptionPane.WARNING_MESSAGE, null);
+							}
+							else
+							{
+								String sp = String.format("exec eliminarAnuncio @idAnuncio = %d", idAnuncio);
+
+								try
+								{
+									dbConnection.prepareCall(sp).execute();
+
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+
+									e1.printStackTrace();
+
+								}
+							}
+						}
+					});
+					btnBorrar.setEnabled(false);
+					btnBorrar.setActionCommand("OK");
+					buttonPane.add(btnBorrar);
+				}
 				btnAutorizar.setActionCommand("OK");
 				btnAutorizar.setEnabled(false);
 				buttonPane.add(btnAutorizar);

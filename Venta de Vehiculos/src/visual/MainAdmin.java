@@ -63,6 +63,41 @@ public class MainAdmin extends JFrame {
 			}
 		});
 		mnNewMenu.add(mntmNewMenuItem);
+		
+		JMenu mnConsultas = new JMenu("Consultas");
+		menuBar.add(mnConsultas);
+		
+		JMenuItem mntmVehculosEnVenta = new JMenuItem("Veh\u00EDculos en venta");
+		mntmVehculosEnVenta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ConsultaGeneralVehiculosVenta(dbConnection).setVisible(true);
+			}
+		});
+		mnConsultas.add(mntmVehculosEnVenta);
+		
+		JMenuItem mntmVendedores = new JMenuItem("Vendedores");
+		mntmVendedores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ConsultaVendedores(dbConnection);
+			}
+		});
+		mnConsultas.add(mntmVendedores);
+		
+		JMenuItem mntmClientes = new JMenuItem("Clientes");
+		mntmClientes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ConsultaGeneralUsuarios(dbConnection).setVisible(true);
+			}
+		});
+		mnConsultas.add(mntmClientes);
+		
+		JMenuItem mntmAnuncios = new JMenuItem("Anuncios");
+		mntmAnuncios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ConsultaPublicacion(dbConnection).setVisible(true);
+			}
+		});
+		mnConsultas.add(mntmAnuncios);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
