@@ -32,25 +32,16 @@ public class ListarAnuncios extends JDialog {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		try {
-			ListarAnuncios dialog = new ListarAnuncios(null, -1);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * Create the dialog.
 	 */
 	public ListarAnuncios(Connection dbConnection, int vendedor) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		setTitle("Mis Anuncios");
 		setBounds(100, 100, 1100, 610);
 		setLocationRelativeTo(null);
@@ -77,9 +68,20 @@ public class ListarAnuncios extends JDialog {
 					
 					try {
 						PreparedStatement st = dbConnection.prepareStatement(query);
-						ResultSet rs = st.executeQuery();
-						table.setModel(DbUtils.resultSetToTableModel(rs));
-						rs.close();
+						ResultSet rs = null;
+						try
+						{
+							rs = st.executeQuery();
+							table.setModel(DbUtils.resultSetToTableModel(rs));
+							
+						}catch (SQLException e) {
+							// TODO: handle exception
+						}finally
+						{
+							st.close();
+							rs.close();
+						}
+						
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

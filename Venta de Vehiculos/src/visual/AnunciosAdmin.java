@@ -30,30 +30,20 @@ public class AnunciosAdmin extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private JTable table;
 	JButton btnAutorizar;
-	int idAnuncio = -1;
-	int idVehiculo = -1;
+	long idAnuncio = -1;
+
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	/**
+	 * Create the dialog.
+	 */
+	public AnunciosAdmin(Connection dbConnection) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		try {
-			AnunciosAdmin dialog = new AnunciosAdmin(null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
-	public AnunciosAdmin(Connection dbConnection) {
 		setTitle("Anuncios Disponibles");
 		setBounds(100, 100, 1100, 610);
 		setLocationRelativeTo(null);
@@ -77,7 +67,7 @@ public class AnunciosAdmin extends JDialog {
 						@Override
 						public void mouseClicked(MouseEvent arg0) {
 							if(table.getSelectedRow()>=0) {
-								idAnuncio = (int) (table.getValueAt(table.getSelectedRow(), 0));
+								idAnuncio = (long) (table.getValueAt(table.getSelectedRow(), 0));
 								btnAutorizar.setEnabled(true);
 							}
 						}
@@ -89,9 +79,20 @@ public class AnunciosAdmin extends JDialog {
 					
 					try {
 						PreparedStatement st = dbConnection.prepareStatement(query);
-						ResultSet rs = st.executeQuery();
-						table.setModel(DbUtils.resultSetToTableModel(rs));
-						rs.close();
+						ResultSet rs = null;
+						try
+						{
+							rs = st.executeQuery();
+							table.setModel(DbUtils.resultSetToTableModel(rs));
+						}catch (Exception e) {
+							// TODO: handle exception
+						}
+						finally
+						{
+							st.close();
+							rs.close();
+						}
+						
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

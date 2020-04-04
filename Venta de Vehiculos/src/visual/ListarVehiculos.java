@@ -34,30 +34,17 @@ public class ListarVehiculos extends JDialog {
 	private JTable table;
 	
 	JButton btnAnuncio;
-	int indiceVehiculo = -1;
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-		try {
-			ListarVehiculos dialog = new ListarVehiculos(null,-1, null);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	long indiceVehiculo = -1;
 
 	/**
 	 * Create the dialog.
 	 */
 	public ListarVehiculos(Connection dbConnection, int vendedor, String nombre) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		setTitle("Listado de vehiculos de: " + nombre);
 		setBounds(100, 100, 940, 551);
 		setLocationRelativeTo(null);
@@ -80,7 +67,7 @@ public class ListarVehiculos extends JDialog {
 						@Override
 						public void mouseClicked(MouseEvent arg0) {
 							if(table.getSelectedRow()>=0) {
-								indiceVehiculo = (int) (table.getValueAt(table.getSelectedRow(), 0));
+								indiceVehiculo = (long) (table.getValueAt(table.getSelectedRow(), 0));
 								btnAnuncio.setEnabled(true);
 							}
 						}
@@ -94,9 +81,17 @@ public class ListarVehiculos extends JDialog {
 					
 					try {
 						PreparedStatement st = dbConnection.prepareStatement(query);
-						ResultSet rs = st.executeQuery();
-						table.setModel(DbUtils.resultSetToTableModel(rs));
-						rs.close();
+						ResultSet rs = null;
+						try
+						{
+							rs = st.executeQuery();
+							table.setModel(DbUtils.resultSetToTableModel(rs));
+						}catch (SQLException e) {
+							// TODO: handle exception
+						}finally {
+							st.close();
+							rs.close();
+						}
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();

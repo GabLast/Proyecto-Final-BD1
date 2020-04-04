@@ -3,6 +3,7 @@ package visual;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -17,55 +18,65 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 
 public class MainCliente extends JFrame {
 
 	private JPanel contentPane;
-	Connection dbConnection = null;
-	int idcliente = -1;
+	//Connection dbConnection = null;
+	long idcliente = -1;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-				try {
-					MainCliente frame = new MainCliente(null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
 	 */
-	public MainCliente(String user) {
-		dbConnection = SQLConnection.connect();
+	public MainCliente(Connection dbConnection, String user) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		//dbConnection = SQLConnection.connect();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		
 		String buscandoCliente = String.format("select u.usuario, p.idPersona, c.idCliente, p.nombre "
 				+ "from Persona p join Users u on p.idPersona = u.idPersona join Cliente as c on c.idPersona = p.idPersona where u.usuario = '%s'", user);
 		
 		try {
-			Statement st2;
-			st2 = dbConnection.createStatement();
-			ResultSet rs3 = st2.executeQuery(buscandoCliente);
+			//Statement st2;
+			//st2 = dbConnection.createStatement();
+			//ResultSet rs3 = st2.executeQuery(buscandoCliente);
 			
-			while(rs3.next() && idcliente == -1)
+			PreparedStatement st2 = dbConnection.prepareStatement(buscandoCliente);
+			ResultSet rs3 = null;
+			
+			try {
+				rs3 = st2.executeQuery();
+				while(rs3.next() && idcliente == -1)
+				{
+					idcliente = Long.valueOf(rs3.getString(3));
+				}
+				
+			}catch (SQLException e) {
+				// TODO: handle exception
+			}finally
 			{
-				idcliente = Integer.valueOf(rs3.getString(3));
+				st2.close();
+				rs3.close();
 			}
-			
-			rs3.close();
 		} catch (SQLException e5) {
 			// TODO Auto-generated catch block
 			e5.printStackTrace();
@@ -84,7 +95,7 @@ public class MainCliente extends JFrame {
 		JMenuItem mntmListarVehculosComprados = new JMenuItem("Listar Veh\u00EDculos Comprados");
 		mntmListarVehculosComprados.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ListarVehiculosComprados(dbConnection, idcliente);
+				new ListarVehiculosComprados(dbConnection, idcliente).setVisible(true);;
 			}
 		});
 		mnNewMenu_1.add(mntmListarVehculosComprados);

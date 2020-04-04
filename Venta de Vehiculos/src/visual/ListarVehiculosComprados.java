@@ -28,29 +28,15 @@ public class ListarVehiculosComprados extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private static JTable table;
-
 	/**
-	 * Launch the application.
+	 * Create the dialog.
 	 */
-	public static void main(String[] args) {
+	public ListarVehiculosComprados(Connection dbConnection, long idCliente) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		try {
-			ListarVehiculosComprados dialog = new ListarVehiculosComprados(null, -1);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
-	public ListarVehiculosComprados(Connection dbConnection, int idCliente) {
 		setTitle("Veh\u00EDculos Disponibles");
 		setBounds(100, 100, 800, 567);
 		setLocationRelativeTo(null);
@@ -93,7 +79,7 @@ public class ListarVehiculosComprados extends JDialog {
 		}
 	}
 	
-	public static void load(Connection dbConnection, int id)
+	public static void load(Connection dbConnection, long id)
 	{
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 		table.getTableHeader().setReorderingAllowed(false);
@@ -103,9 +89,17 @@ public class ListarVehiculosComprados extends JDialog {
 		
 		try {
 			PreparedStatement st = dbConnection.prepareStatement(query);
-			ResultSet rs = st.executeQuery();
-			table.setModel(DbUtils.resultSetToTableModel(rs));
-			rs.close();
+			ResultSet rs = null;
+			try
+			{
+				rs = st.executeQuery();
+				table.setModel(DbUtils.resultSetToTableModel(rs));
+			}catch (SQLException e) {
+				// TODO: handle exception
+			}finally {
+				st.close();
+				rs.close();
+			}
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

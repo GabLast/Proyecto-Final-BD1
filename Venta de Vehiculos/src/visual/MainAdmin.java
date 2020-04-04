@@ -17,40 +17,34 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.event.ActionEvent;
 
 public class MainAdmin extends JFrame {
 
 	private JPanel contentPane;
-	Connection dbConnection = null;
+	//Connection dbConnection = null;
 
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+	public MainAdmin(Connection dbConnection, String user) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
 				try {
-					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-				} catch (Throwable e) {
-					e.printStackTrace();
+					dbConnection.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				try {
-					MainAdmin frame = new MainAdmin(null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				
 			}
 		});
-	}
-
-	/**
-	 * Create the frame.
-	 */
-	public MainAdmin(String user) {
-		dbConnection = SQLConnection.connect();
+		
 		setTitle("Ventana de Administradores");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 808, 545);

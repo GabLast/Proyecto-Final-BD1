@@ -23,7 +23,10 @@ import logic.SQLConnection;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -56,6 +59,23 @@ public class MainLogIn extends JDialog {
 	
 	
 	public MainLogIn() {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				try {
+					dbConnection.close();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		dbConnection = SQLConnection.connect();
 		setResizable(false);
 		setTitle("Iniciando sesi\u00F3n");
@@ -90,19 +110,20 @@ public class MainLogIn extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				String user = txtUsuario.getText();
 				String password = String.valueOf(passwordField.getPassword());
-
+				String consulta = "select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser";
 				try
 				{
 					if(dbConnection.isClosed())
 						dbConnection = SQLConnection.connect();
-					Statement statement = dbConnection.createStatement();
+										
+					PreparedStatement statement = dbConnection.prepareStatement(consulta);
 					ResultSet query = null;
-					
 					try
 					{
-						query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
+						//query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
 
-
+						query = statement.executeQuery();
+						
 						while(query.next() && !userExists)
 						{
 							if(user.equalsIgnoreCase(query.getString(1)) && password.equals(query.getString(3)))
@@ -114,7 +135,7 @@ public class MainLogIn extends JDialog {
 								{
 									//query.close();
 									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-									MainAdmin window = new MainAdmin(user);
+									MainAdmin window = new MainAdmin(dbConnection, user);
 									dispose();
 									window.setVisible(true);
 
@@ -123,7 +144,7 @@ public class MainLogIn extends JDialog {
 								{
 									//query.close();
 									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-									MainVendedor window = new MainVendedor(user);
+									MainVendedor window = new MainVendedor(dbConnection, user);
 									window.setVisible(true);
 									dispose();
 								}
@@ -131,7 +152,7 @@ public class MainLogIn extends JDialog {
 								{
 									//query.close();
 									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-									MainCliente window = new MainCliente(user);
+									MainCliente window = new MainCliente(dbConnection, user);
 									dispose();
 									window.setVisible(true);
 								}
@@ -143,11 +164,15 @@ public class MainLogIn extends JDialog {
 					{
 			            a.printStackTrace();
 
+					
 					}finally
 					{
-						statement.close();
-						query.close();
-						dbConnection.close();
+						if(!query.isClosed())
+						{
+							statement.close();
+							query.close();
+						}
+						//dbConnection.close();
 					}
 					
 					if(!userExists)
@@ -157,15 +182,8 @@ public class MainLogIn extends JDialog {
 					}
 
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					
+					// TODO Auto-generated catch block				
 					e1.printStackTrace();
-					try {
-						dbConnection.close();
-					} catch (SQLException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
 				}
 			}
 		});
@@ -213,19 +231,20 @@ public class MainLogIn extends JDialog {
 			public void actionPerformed(ActionEvent arg0) {
 				String user = txtUsuario.getText();
 				String password = String.valueOf(passwordField.getPassword());
-
+				String consulta = "select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser";
 				try
 				{
 					if(dbConnection.isClosed())
 						dbConnection = SQLConnection.connect();
-					Statement statement = dbConnection.createStatement();
+										
+					PreparedStatement statement = dbConnection.prepareStatement(consulta);
 					ResultSet query = null;
-					
 					try
 					{
-						query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
+						//query = statement.executeQuery("select u.usuario, t.descripcion, u.clave from Users as u join TipoUser as t on u.idTipoUser = t.idTipoUser");
 
-
+						query = statement.executeQuery();
+						
 						while(query.next() && !userExists)
 						{
 							if(user.equalsIgnoreCase(query.getString(1)) && password.equals(query.getString(3)))
@@ -237,7 +256,7 @@ public class MainLogIn extends JDialog {
 								{
 									//query.close();
 									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-									MainAdmin window = new MainAdmin(user);
+									MainAdmin window = new MainAdmin(dbConnection, user);
 									dispose();
 									window.setVisible(true);
 
@@ -246,7 +265,7 @@ public class MainLogIn extends JDialog {
 								{
 									//query.close();
 									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-									MainVendedor window = new MainVendedor(user);
+									MainVendedor window = new MainVendedor(dbConnection, user);
 									window.setVisible(true);
 									dispose();
 								}
@@ -254,7 +273,7 @@ public class MainLogIn extends JDialog {
 								{
 									//query.close();
 									JOptionPane.showMessageDialog(null, user +" ha iniciado sección correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-									MainCliente window = new MainCliente(user);
+									MainCliente window = new MainCliente(dbConnection, user);
 									dispose();
 									window.setVisible(true);
 								}
@@ -266,11 +285,15 @@ public class MainLogIn extends JDialog {
 					{
 			            a.printStackTrace();
 
+					
 					}finally
 					{
-						statement.close();
-						query.close();
-						dbConnection.close();
+						if(!query.isClosed())
+						{
+							statement.close();
+							query.close();
+						}
+						//dbConnection.close();
 					}
 					
 					if(!userExists)
@@ -280,15 +303,8 @@ public class MainLogIn extends JDialog {
 					}
 
 				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					
+					// TODO Auto-generated catch block				
 					e1.printStackTrace();
-					try {
-						dbConnection.close();
-					} catch (SQLException e2) {
-						// TODO Auto-generated catch block
-						e2.printStackTrace();
-					}
 				}
 			}
 		});

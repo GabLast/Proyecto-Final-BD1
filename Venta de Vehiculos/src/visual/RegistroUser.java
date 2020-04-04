@@ -51,29 +51,15 @@ public class RegistroUser extends JDialog {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-				} catch (Throwable e) {
-					e.printStackTrace();
-				}
-				try {
-					Connection dbConnection = null;
-					RegistroUser frame = new RegistroUser(dbConnection);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
-
 	/**
 	 * Create the frame.
 	 */
 	public RegistroUser(Connection dbConnection) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		setTitle("Registrando un nuevo usuario");
 		setBounds(100, 100, 380, 623);
 		setResizable(false);
@@ -146,7 +132,7 @@ public class RegistroUser extends JDialog {
 					{
 						JOptionPane.showMessageDialog(null, "Tipo de usuario no válido", "Error", JOptionPane.WARNING_MESSAGE, null);
 					}
-					//System.out.println(user.getTipo());
+					
 					if(cbxTipoCuenta.getSelectedItem().toString().equalsIgnoreCase("Cliente"))
 					{
 						Cliente client = new Cliente(txtCedula.getText(), txtNombre.getText(), txtApellido.getText(), String.valueOf(cbxProvincia.getSelectedIndex()+1), txtMail.getText());
@@ -185,12 +171,6 @@ public class RegistroUser extends JDialog {
 							// TODO Auto-generated catch block
 
 							e1.printStackTrace();
-							try {
-								dbConnection.close();
-							} catch (SQLException e2) {
-								// TODO Auto-generated catch block
-								e2.printStackTrace();
-							}
 
 						}
 

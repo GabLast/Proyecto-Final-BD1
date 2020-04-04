@@ -3,6 +3,7 @@ package visual;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -20,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.UIManager;
 import javax.swing.JTextField;
 import javax.swing.DefaultComboBoxModel;
 import java.awt.event.ActionListener;
@@ -40,24 +42,15 @@ public class RegistrarVehiculo extends JDialog {
 	JComboBox cbxEstado;
 	int idModelo = -1;
 
-
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			RegistrarVehiculo dialog = new RegistrarVehiculo(null, -1);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
 	/**
 	 * Create the dialog.
 	 */
 	public RegistrarVehiculo(Connection dbConnection, int idVendedor) {
+		try {
+			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
 		setTitle("Registrando un Veh\u00EDculo");
 		setBounds(100, 100, 445, 446);
 		setLocationRelativeTo(null);
@@ -96,16 +89,27 @@ public class RegistrarVehiculo extends JDialog {
 			String cons = "select descripcion from TipoVehiculo";
 			
 			try {
-				Statement st;
-				st = dbConnection.createStatement();
-				ResultSet rs = st.executeQuery(cons);
-				
-				while(rs.next())
+				//Statement st;
+				//st = dbConnection.createStatement();
+				//ResultSet rs = st.executeQuery(cons);
+				PreparedStatement st = dbConnection.prepareStatement(cons);
+				ResultSet rs = null;
+				try
 				{
-					cbxTipoVehiculo.insertItemAt(rs.getString(1), i);
-					i++;
+					rs = st.executeQuery();
+					while(rs.next())
+					{
+						cbxTipoVehiculo.insertItemAt(rs.getString(1), i);
+						i++;
+					}
+				}catch (SQLException e) {
+					// TODO: handle exception
+				}finally {
+					st.close();
+					rs.close();
 				}
-				rs.close();
+				
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -121,14 +125,23 @@ public class RegistrarVehiculo extends JDialog {
 						cbxModelo.setModel(new DefaultComboBoxModel(new String[] {"<Seleccione>"}));
 						Statement st;
 						st = dbConnection.createStatement();
-						ResultSet rs = st.executeQuery(Query1);
+						ResultSet rs = null;
 						
-						while(rs.next())
+						try
 						{
-							cbxModelo.insertItemAt(rs.getString(2), k);
-							k++;
-						}
-						rs.close();
+							rs = st.executeQuery(Query1);
+							while(rs.next())
+							{
+								cbxModelo.insertItemAt(rs.getString(2), k);
+								k++;
+							}
+						}catch (SQLException a) {
+							// TODO: handle exception
+						}finally {
+							st.close();
+							rs.close();
+						}					
+						
 					} catch (SQLException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
@@ -144,14 +157,21 @@ public class RegistrarVehiculo extends JDialog {
 			try {
 				Statement st;
 				st = dbConnection.createStatement();
-				ResultSet rs = st.executeQuery(Query);
-				
-				while(rs.next())
+				ResultSet rs = null;
+				try
 				{
-					cbxMarca.insertItemAt(rs.getString(1), j);
-					j++;
+					rs = st.executeQuery(Query);
+					while(rs.next())
+					{
+						cbxMarca.insertItemAt(rs.getString(1), j);
+						j++;
+					}
+				}catch (Exception e) {
+					// TODO: handle exception
+				}finally {
+					st.close();
+					rs.close();
 				}
-				rs.close();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

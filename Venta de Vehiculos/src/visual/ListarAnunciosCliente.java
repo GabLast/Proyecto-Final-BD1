@@ -29,32 +29,19 @@ public class ListarAnunciosCliente extends JDialog {
 	private final JPanel contentPanel = new JPanel();
 	private static JTable table;
 	JButton btnComprar;
-	int idAnuncio = -1;
-	int idVehiculo = -1;
+	long idAnuncio = -1;
+	long idVehiculo = -1;
 	long precioVehi = -1;
 
 	/**
-	 * Launch the application.
+	 * Create the dialog.
 	 */
-	public static void main(String[] args) {
+	public ListarAnunciosCliente(Connection dbConnection, long idCliente) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		try {
-			ListarAnunciosCliente dialog = new ListarAnunciosCliente(null, -1);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
-	public ListarAnunciosCliente(Connection dbConnection, int idCliente) {
 		setTitle("Veh\u00EDculos Disponibles");
 		setBounds(100, 100, 800, 567);
 		setLocationRelativeTo(null);
@@ -78,9 +65,9 @@ public class ListarAnunciosCliente extends JDialog {
 						@Override
 						public void mouseClicked(MouseEvent arg0) {
 							if(table.getSelectedRow()>=0) {
-								idAnuncio = (int) (table.getValueAt(table.getSelectedRow(), 0));
-								idVehiculo = (int) (table.getValueAt(table.getSelectedRow(), 1));
-								precioVehi = (long) (table.getValueAt(table.getSelectedRow(), 9));
+								idAnuncio = (long) (table.getValueAt(table.getSelectedRow(), 0));
+								idVehiculo = (long) (table.getValueAt(table.getSelectedRow(), 1));
+								precioVehi = (long) (table.getValueAt(table.getSelectedRow(), 8));
 								btnComprar.setEnabled(true);
 							}
 						}
@@ -154,9 +141,17 @@ public class ListarAnunciosCliente extends JDialog {
 		
 		try {
 			PreparedStatement st = dbConnection.prepareStatement(query);
-			ResultSet rs = st.executeQuery();
-			table.setModel(DbUtils.resultSetToTableModel(rs));
-			rs.close();
+			ResultSet rs = null;
+			try
+			{
+				rs = st.executeQuery();
+				table.setModel(DbUtils.resultSetToTableModel(rs));
+			}catch (SQLException e) {
+				// TODO: handle exception
+			}finally {
+				st.close();
+				rs.close();
+			}
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

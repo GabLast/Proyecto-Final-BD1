@@ -49,26 +49,17 @@ public class PublicarAnuncio extends JDialog {
 	JTextArea txtDescripcion;
 	/**
 	 * Launch the application.
+
+
+	/**
+	 * Create the dialog.
 	 */
-	public static void main(String[] args) {
+	public PublicarAnuncio(Connection dbConnection, int idVendedor, long idVehiculo) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		try {
-			PublicarAnuncio dialog = new PublicarAnuncio(null, -1, -1);
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
-	public PublicarAnuncio(Connection dbConnection, int idVendedor, int idVehiculo) {
 		setTitle("Publicaci\u00F3n de anuncios");
 		setBounds(100, 100, 746, 476);
 		setLocationRelativeTo(null);
@@ -249,12 +240,3 @@ public class PublicarAnuncio extends JDialog {
 			return true;
 	}
 }
-
-//private void calcularCosto()
-//{
-//	Date fin = fechaFinal.getDate();
-//	Date inicio = fechaInicio.getDate();
-//	
-//	int days = (int) (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24);
-//	txtCostoAnuncio.setText(String.valueOf(days*1200));
-//}
