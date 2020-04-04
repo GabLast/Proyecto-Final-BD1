@@ -1,6 +1,7 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,6 +27,7 @@ public class MainCliente extends JFrame {
 
 	private JPanel contentPane;
 	//Connection dbConnection = null;
+	private Dimension dim;
 	long idcliente = -1;
 
 
@@ -43,7 +45,8 @@ public class MainCliente extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				try {
-					dbConnection.close();
+					if(!dbConnection.isClosed())
+						dbConnection.close();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -83,7 +86,10 @@ public class MainCliente extends JFrame {
 		}
 		setTitle("Compra de Veh\u00EDculos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 750, 520);
+		dim = super.getToolkit().getScreenSize();
+		dim.width *= .85;
+		dim.height *= .85;
+		super.setSize(dim.width, dim.height);
 		setLocationRelativeTo(null);
 		
 		JMenuBar menuBar = new JMenuBar();

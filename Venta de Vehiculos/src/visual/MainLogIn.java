@@ -68,7 +68,8 @@ public class MainLogIn extends JDialog {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				try {
-					dbConnection.close();
+					if(!dbConnection.isClosed())
+						dbConnection.close();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();

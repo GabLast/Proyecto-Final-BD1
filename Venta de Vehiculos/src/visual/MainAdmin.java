@@ -1,6 +1,7 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -24,6 +25,7 @@ import java.awt.event.ActionEvent;
 public class MainAdmin extends JFrame {
 
 	private JPanel contentPane;
+	private Dimension dim;
 	//Connection dbConnection = null;
 
 	public MainAdmin(Connection dbConnection, String user) {
@@ -36,7 +38,8 @@ public class MainAdmin extends JFrame {
 			@Override
 			public void windowClosing(WindowEvent e) {
 				try {
-					dbConnection.close();
+					if(!dbConnection.isClosed())
+						dbConnection.close();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -47,7 +50,10 @@ public class MainAdmin extends JFrame {
 		
 		setTitle("Ventana de Administradores");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 808, 545);
+		dim = super.getToolkit().getScreenSize();
+		dim.width *= .85;
+		dim.height *= .85;
+		super.setSize(dim.width, dim.height);
 		setLocationRelativeTo(null);
 		
 		JMenuBar menuBar = new JMenuBar();
@@ -59,7 +65,7 @@ public class MainAdmin extends JFrame {
 		JMenuItem mntmNewMenuItem = new JMenuItem("Listado de Anuncios");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new AnunciosAdmin(dbConnection).setVisible(true);
+				new AnunciosAdmin().setVisible(true);
 			}
 		});
 		mnNewMenu.add(mntmNewMenuItem);
@@ -78,7 +84,7 @@ public class MainAdmin extends JFrame {
 		JMenuItem mntmVendedores = new JMenuItem("Vendedores");
 		mntmVendedores.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				new ConsultaVendedores(dbConnection);
+				new ConsultaVendedores(dbConnection).setVisible(true);;
 			}
 		});
 		mnConsultas.add(mntmVendedores);
@@ -98,6 +104,30 @@ public class MainAdmin extends JFrame {
 			}
 		});
 		mnConsultas.add(mntmAnuncios);
+		
+		JMenuItem mntmVendedoresConMayores = new JMenuItem("Vendedores con Mayores Ventas");
+		mntmVendedoresConMayores.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ConsultaVendedoresMayorVenntas(dbConnection).setVisible(true);
+			}
+		});
+		mnConsultas.add(mntmVendedoresConMayores);
+		
+		JMenuItem mntmMostrarVehculosRegistrados = new JMenuItem("Mostrar Veh\u00EDculos Registrados");
+		mntmMostrarVehculosRegistrados.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new MostrarVehículosPorMarca(dbConnection).setVisible(true);
+			}
+		});
+		mnConsultas.add(mntmMostrarVehculosRegistrados);
+		
+		JMenuItem mntmVentas = new JMenuItem("Ventas");
+		mntmVentas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				new ConsultaVentas(dbConnection).setVisible(true);
+			}
+		});
+		mnConsultas.add(mntmVentas);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));

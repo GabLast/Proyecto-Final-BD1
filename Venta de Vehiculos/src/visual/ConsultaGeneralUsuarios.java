@@ -17,6 +17,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import logic.SQLConnection;
 import net.proteanit.sql.DbUtils;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -55,11 +56,14 @@ public class ConsultaGeneralUsuarios extends JDialog {
 					table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 					table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 					table.getTableHeader().setReorderingAllowed(false);
+					scrollPane.setViewportView(table);
 
 
 					String query = String.format("select * from listarClientes()");
 
 					try {
+						if(dbConnection.isClosed())
+							dbConnection = SQLConnection.connect();
 						PreparedStatement st = dbConnection.prepareStatement(query);
 						ResultSet rs = null;
 						try

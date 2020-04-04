@@ -166,7 +166,8 @@ public class RegistrarVehiculo extends JDialog {
 						cbxMarca.insertItemAt(rs.getString(1), j);
 						j++;
 					}
-				}catch (Exception e) {
+				}catch (SQLException e) {
+					e.printStackTrace();
 					// TODO: handle exception
 				}finally {
 					st.close();
@@ -268,11 +269,12 @@ public class RegistrarVehiculo extends JDialog {
 								
 								try {
 									dbConnection.prepareCall(insert).execute();
-									
+									dbConnection.close();
 								} catch (SQLException e1) {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
+								
 								
 								JOptionPane.showMessageDialog(null, "Se ha registrado correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
 								dispose();

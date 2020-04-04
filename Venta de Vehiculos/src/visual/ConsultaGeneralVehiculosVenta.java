@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import logic.SQLConnection;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JScrollPane;
@@ -55,12 +57,14 @@ public class ConsultaGeneralVehiculosVenta extends JDialog {
 					table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 					table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 					table.getTableHeader().setReorderingAllowed(false);
+					scrollPane.setViewportView(table);
 					
-					
-					String query = String.format("exec ListarVehiculosEnVenta"); //sp
+					String query = "exec ListarVehiculosEnVenta";
 					
 					try {
-						PreparedStatement st = dbConnection.prepareStatement(query);
+						if(dbConnection.isClosed())
+							dbConnection = SQLConnection.connect();
+						CallableStatement st = dbConnection.prepareCall(query);
 						ResultSet rs = null;
 						try
 						{
@@ -68,6 +72,7 @@ public class ConsultaGeneralVehiculosVenta extends JDialog {
 							table.setModel(DbUtils.resultSetToTableModel(rs));
 						}catch (SQLException e) {
 							// TODO: handle exception
+							e.printStackTrace();
 						}finally {
 							st.close();
 							rs.close();

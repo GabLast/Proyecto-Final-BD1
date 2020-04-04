@@ -19,6 +19,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import logic.SQLConnection;
 import net.proteanit.sql.DbUtils;
 
 public class ConsultaPublicacion extends JDialog {
@@ -52,11 +53,14 @@ public class ConsultaPublicacion extends JDialog {
 						table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 						table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 						table.getTableHeader().setReorderingAllowed(false);
+						scrollPane.setViewportView(table);
 
 
 						String query = String.format("select * from listarPublicaciones()");
 
 						try {
+							if(dbConnection.isClosed())
+								dbConnection = SQLConnection.connect();
 							PreparedStatement st = dbConnection.prepareStatement(query);
 							ResultSet rs = null;
 							try

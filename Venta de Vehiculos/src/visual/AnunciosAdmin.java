@@ -22,16 +22,19 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
 
+import logic.SQLConnection;
 import net.proteanit.sql.DbUtils;
 
 public class AnunciosAdmin extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
-	private JTable table;
+	private static JTable table;
 	JButton btnAutorizar;
 	JButton btnBorrar;
 	long idAnuncio = -1;
+	Connection dbConnection = null;
 
 	/**
 	 * Launch the application.
@@ -39,12 +42,14 @@ public class AnunciosAdmin extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public AnunciosAdmin(Connection dbConnection) {
+	public AnunciosAdmin() {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		dbConnection = SQLConnection.connect();
+		
 		setTitle("Anuncios Disponibles");
 		setBounds(100, 100, 1100, 610);
 		setLocationRelativeTo(null);
@@ -76,29 +81,7 @@ public class AnunciosAdmin extends JDialog {
 					});
 					scrollPane.setViewportView(table);
 					
-					String query ="select idAnuncio as 'Código del Anuncio', descripcion as 'Descripción', fechaInicio as 'Fecha de Inicio', fechaFin as 'Fecha de Baja', costo as 'Costo', "
-							+ "idVehiculo as 'Código del Vehículo', preciovehiculo as 'Precio del Vehículo', autorizado as 'Autorización' from Anuncio";
-					
-					try {
-						PreparedStatement st = dbConnection.prepareStatement(query);
-						ResultSet rs = null;
-						try
-						{
-							rs = st.executeQuery();
-							table.setModel(DbUtils.resultSetToTableModel(rs));
-						}catch (Exception e) {
-							// TODO: handle exception
-						}
-						finally
-						{
-							st.close();
-							rs.close();
-						}
-						
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					load(dbConnection);
 					
 				}
 			}
@@ -108,7 +91,7 @@ public class AnunciosAdmin extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Salir");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();
@@ -128,45 +111,25 @@ public class AnunciosAdmin extends JDialog {
 						}
 						else
 						{
-//							String query = String.format("select idvehiculo from anuncio where idAnuncio = '%d'", idAnuncio);
-//							
-//							try {
-//								Statement st;
-//								st = dbConnection.createStatement();
-//								ResultSet rs = st.executeQuery(query);
-//								
-//								while(rs.next() && idVehiculo == -1)
-//								{
-//									idVehiculo = Integer.valueOf(rs.getString(1));
-//								}
-//								
-//								rs.close();
-//							} catch (SQLException e5) {
-//								// TODO Auto-generated catch block
-//								e5.printStackTrace();
-//							}
-							
-//							if(idVehiculo == -1)
-//							{
-//								JOptionPane.showMessageDialog(null, "El vehículo no existe", "Error", JOptionPane.WARNING_MESSAGE, null);
-//							}
-//							else
-//							{
-								String sp = String.format("exec autorizarAnuncio @idAnuncio = %d", idAnuncio);
+
+							String sp = String.format("exec autorizarAnuncio @idAnuncio = %d", idAnuncio);
+
+							try
+							{
+								if(dbConnection.isClosed())
+									dbConnection = SQLConnection.connect();
 								
-								try
-								{
-									dbConnection.prepareCall(sp).execute();
-									
-								} catch (SQLException e1) {
-									// TODO Auto-generated catch block
-									
-									e1.printStackTrace();
-									
-								}
-								
-								JOptionPane.showMessageDialog(null, "El anuncio ha sido autorizado correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
-//							}		
+								dbConnection.prepareCall(sp).execute();
+
+							} catch (SQLException e1) {
+								// TODO Auto-generated catch block
+
+								e1.printStackTrace();
+
+							}
+							dispose();
+							new AnunciosAdmin().setVisible(true);
+							JOptionPane.showMessageDialog(null, "El anuncio ha sido autorizado correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
 						}
 					}
 				});
@@ -177,7 +140,7 @@ public class AnunciosAdmin extends JDialog {
 							
 							if(idAnuncio == -1)
 							{
-								JOptionPane.showMessageDialog(null, "Elija anuncio a borrarr", "Error", JOptionPane.WARNING_MESSAGE, null);
+								JOptionPane.showMessageDialog(null, "Elija anuncio a borrar", "Error", JOptionPane.WARNING_MESSAGE, null);
 							}
 							else
 							{
@@ -185,6 +148,8 @@ public class AnunciosAdmin extends JDialog {
 
 								try
 								{
+									if(dbConnection.isClosed())
+										dbConnection = SQLConnection.connect();
 									dbConnection.prepareCall(sp).execute();
 
 								} catch (SQLException e1) {
@@ -193,6 +158,9 @@ public class AnunciosAdmin extends JDialog {
 									e1.printStackTrace();
 
 								}
+								dispose();
+								new AnunciosAdmin().setVisible(true);
+								JOptionPane.showMessageDialog(null, "El anuncio ha sido eliminado correctamente", "Notificación", JOptionPane.INFORMATION_MESSAGE);
 							}
 						}
 					});
@@ -204,6 +172,33 @@ public class AnunciosAdmin extends JDialog {
 				btnAutorizar.setEnabled(false);
 				buttonPane.add(btnAutorizar);
 			}
+		}
+	}
+	
+	public static void load(Connection dbConnection)
+	{
+		String query ="select idAnuncio as 'Código del Anuncio', descripcion as 'Descripción', fechaInicio as 'Fecha de Inicio', fechaFin as 'Fecha de Baja', costo as 'Costo', "
+				+ "idVehiculo as 'Código del Vehículo', preciovehiculo as 'Precio del Vehículo', autorizado as 'Autorización' from Anuncio";
+		//table.setModel(new DefaultTableModel());
+		
+		try {
+			if(dbConnection.isClosed())
+				dbConnection = SQLConnection.connect();
+			PreparedStatement st = dbConnection.prepareStatement(query);
+			ResultSet rs = null;
+			try
+			{
+				rs = st.executeQuery();
+				table.setModel(DbUtils.resultSetToTableModel(rs));
+			}catch (Exception e) {
+				// TODO: handle exception
+			}finally
+			{
+				dbConnection.close();
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
 	}
 

@@ -1,6 +1,7 @@
 package visual;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,6 +33,7 @@ public class MainVendedor extends JFrame {
 	private JPanel contentPane;
 	//Connection dbConnection = null;
 	int idVendedor = -1;
+	private Dimension dim;
 	String nombre = null;
 	/**
 	 * Launch the application.
@@ -92,7 +94,10 @@ public class MainVendedor extends JFrame {
 		
 		setTitle("Ventana del vendedor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 762, 494);
+		dim = super.getToolkit().getScreenSize();
+		dim.width *= .85;
+		dim.height *= .85;
+		super.setSize(dim.width, dim.height);
 		setLocationRelativeTo(null);
 		
 		JMenuBar menuBar = new JMenuBar();

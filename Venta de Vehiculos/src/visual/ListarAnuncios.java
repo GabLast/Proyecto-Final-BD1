@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
 
+import logic.SQLConnection;
 import net.proteanit.sql.DbUtils;
 
 import javax.swing.JScrollPane;
@@ -42,6 +43,7 @@ public class ListarAnuncios extends JDialog {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		dbConnection = SQLConnection.connect();
 		setTitle("Mis Anuncios");
 		setBounds(100, 100, 1100, 610);
 		setLocationRelativeTo(null);
@@ -67,6 +69,8 @@ public class ListarAnuncios extends JDialog {
 							+ "idVehiculo as 'Código del Vehículo', preciovehiculo as 'Precio del Vehículo' from Anuncio where idVendedor = %d", vendedor);
 					
 					try {
+						if(dbConnection.isClosed())
+							dbConnection = SQLConnection.connect();
 						PreparedStatement st = dbConnection.prepareStatement(query);
 						ResultSet rs = null;
 						try
@@ -76,11 +80,8 @@ public class ListarAnuncios extends JDialog {
 							
 						}catch (SQLException e) {
 							// TODO: handle exception
-						}finally
-						{
-							st.close();
-							rs.close();
 						}
+						rs.close();
 						
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
@@ -95,7 +96,7 @@ public class ListarAnuncios extends JDialog {
 			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
-				JButton cancelButton = new JButton("Cancel");
+				JButton cancelButton = new JButton("Salir");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();

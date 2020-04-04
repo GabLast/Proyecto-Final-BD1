@@ -20,6 +20,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.TitledBorder;
 
+import logic.SQLConnection;
 import net.proteanit.sql.DbUtils;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -31,17 +32,19 @@ public class ListarAnunciosCliente extends JDialog {
 	JButton btnComprar;
 	long idAnuncio = -1;
 	long idVehiculo = -1;
-	long precioVehi = -1;
+	Connection dbConnection = null;
+	//String precioVehi = null;
 
 	/**
 	 * Create the dialog.
 	 */
-	public ListarAnunciosCliente(Connection dbConnection, long idCliente) {
+	public ListarAnunciosCliente(Connection z, long idCliente) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		dbConnection = SQLConnection.connect();
 		setTitle("Veh\u00EDculos Disponibles");
 		setBounds(100, 100, 800, 567);
 		setLocationRelativeTo(null);
@@ -67,7 +70,7 @@ public class ListarAnunciosCliente extends JDialog {
 							if(table.getSelectedRow()>=0) {
 								idAnuncio = (long) (table.getValueAt(table.getSelectedRow(), 0));
 								idVehiculo = (long) (table.getValueAt(table.getSelectedRow(), 1));
-								precioVehi = (long) (table.getValueAt(table.getSelectedRow(), 8));
+								//precioVehi = String.valueOf((table.getValueAt(table.getSelectedRow(), 8)));
 								btnComprar.setEnabled(true);
 							}
 						}
@@ -97,7 +100,7 @@ public class ListarAnunciosCliente extends JDialog {
 				btnComprar.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
-						if(idAnuncio == -1 || idVehiculo == -1 || precioVehi == -1)
+						if(idAnuncio == -1 || idVehiculo == -1 /*|| precioVehi == null*/)
 						{
 							JOptionPane.showMessageDialog(null, "Elija el vehículo a comprar", "Error", JOptionPane.WARNING_MESSAGE, null);
 						}
@@ -108,6 +111,8 @@ public class ListarAnunciosCliente extends JDialog {
 									idCliente, idVehiculo, idAnuncio);
 							try
 							{
+								if(dbConnection.isClosed())
+									dbConnection = SQLConnection.connect();
 								dbConnection.prepareCall(sp).execute();
 								
 							} catch (SQLException e1) {
@@ -117,9 +122,10 @@ public class ListarAnunciosCliente extends JDialog {
 								
 							}
 							
-							JOptionPane.showMessageDialog(null, "Su anuncio ha sido creado. Este será aprobado en unos minutos.", "Notificación", 
+							JOptionPane.showMessageDialog(null, "Su compra ha sido realizada exitosamente.", "Notificación", 
 									JOptionPane.INFORMATION_MESSAGE);
-							ListarAnunciosCliente.load(dbConnection);
+							dispose();
+							new ListarAnunciosCliente(dbConnection, idCliente).setVisible(true);
 						}
 					}
 				});
@@ -140,6 +146,8 @@ public class ListarAnunciosCliente extends JDialog {
 		String query = String.format("exec ListarVehiculosEnVenta"); //sp
 		
 		try {
+			if(dbConnection.isClosed())
+				dbConnection = SQLConnection.connect();
 			PreparedStatement st = dbConnection.prepareStatement(query);
 			ResultSet rs = null;
 			try
@@ -148,10 +156,12 @@ public class ListarAnunciosCliente extends JDialog {
 				table.setModel(DbUtils.resultSetToTableModel(rs));
 			}catch (SQLException e) {
 				// TODO: handle exception
-			}finally {
-				st.close();
-				rs.close();
+				e.printStackTrace();
 			}
+//			finally {
+//				st.close();
+				rs.close();
+//			}
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

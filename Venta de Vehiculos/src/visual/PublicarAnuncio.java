@@ -8,8 +8,13 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.text.SimpleDateFormat;
 import java.awt.event.ActionEvent;
 import javax.swing.border.TitledBorder;
@@ -32,6 +37,8 @@ import javax.swing.event.ChangeEvent;
 import com.toedter.calendar.JCalendar;
 
 import logic.Anuncio;
+import logic.SQLConnection;
+import net.proteanit.sql.DbUtils;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -47,6 +54,7 @@ public class PublicarAnuncio extends JDialog {
 	JCalendar fechaFinal;
 	private JTextField textField;
 	JTextArea txtDescripcion;
+	Connection dbConnection = null;
 	/**
 	 * Launch the application.
 
@@ -54,12 +62,13 @@ public class PublicarAnuncio extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public PublicarAnuncio(Connection dbConnection, int idVendedor, long idVehiculo) {
+	public PublicarAnuncio(Connection z, int idVendedor, long idVehiculo) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		dbConnection = SQLConnection.connect();
 		setTitle("Publicaci\u00F3n de anuncios");
 		setBounds(100, 100, 746, 476);
 		setLocationRelativeTo(null);
@@ -128,22 +137,10 @@ public class PublicarAnuncio extends JDialog {
 			panel_1.add(txtDescripcion, BorderLayout.CENTER);
 			
 			fechaInicio = new JCalendar();
-			fechaInicio.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					calcularCosto();
-				}
-			});
 			fechaInicio.setBounds(141, 33, 205, 153);
 			panel.add(fechaInicio);
 			
 			fechaFinal = new JCalendar();
-			fechaFinal.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent arg0) {
-					calcularCosto();
-				}
-			});
 			fechaFinal.setBounds(501, 33, 205, 153);
 			panel.add(fechaFinal);
 			
@@ -157,7 +154,7 @@ public class PublicarAnuncio extends JDialog {
 			JButton btnNewButton = new JButton("Calcular");
 			btnNewButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					calcularCosto();
+					calcularCosto(dbConnection);
 				}
 			});
 			btnNewButton.setBounds(454, 203, 89, 23);
@@ -199,6 +196,8 @@ public class PublicarAnuncio extends JDialog {
 							
 							try
 							{
+								if(dbConnection.isClosed())
+									dbConnection = SQLConnection.connect();
 								dbConnection.prepareCall(sp).execute();
 								
 							} catch (SQLException e1) {
@@ -220,13 +219,33 @@ public class PublicarAnuncio extends JDialog {
 		}
 	}
 	
-	private void calcularCosto()
+	private void calcularCosto(Connection dbConnection)
 	{
+		
 		Date fin = fechaFinal.getDate();
 		Date inicio = fechaInicio.getDate();
+		float valor = 0;
 		
-		int days = (int) (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24);
-		txtCostoAnuncio.setText(String.valueOf(days*1200) + ".00");
+		java.sql.Date sqlDate1 = new java.sql.Date(inicio.getTime());
+		java.sql.Date sqlDate2 = new java.sql.Date(fin.getTime());
+		
+		
+		try {
+			if(dbConnection.isClosed())
+				dbConnection = SQLConnection.connect();
+			CallableStatement cstmt = dbConnection.prepareCall("{? = CALL [dbo].[calcularCosto](?, ?)}");
+			cstmt.registerOutParameter(1, Types.FLOAT);
+			cstmt.setDate(2, sqlDate1);
+			cstmt.setDate(3, sqlDate2);
+			cstmt.execute();
+			valor = cstmt.getFloat(1);
+		}catch (SQLException e) {
+			e.printStackTrace();
+			// TODO: handle exception
+		}
+		
+		//int days = (int) (fin.getTime() - inicio.getTime()) / (1000 * 60 * 60 * 24);
+		txtCostoAnuncio.setText(String.valueOf(valor));
 	}
 	
 	private boolean verificarCampos()

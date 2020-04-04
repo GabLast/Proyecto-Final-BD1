@@ -22,6 +22,7 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import logic.SQLConnection;
 import net.proteanit.sql.DbUtils;
 
 public class ListarVehiculosComprados extends JDialog {
@@ -88,6 +89,8 @@ public class ListarVehiculosComprados extends JDialog {
 		String query = String.format("select * from comprasCliente(%d)", id); //sp
 		
 		try {
+			if(dbConnection.isClosed())
+				dbConnection = SQLConnection.connect();
 			PreparedStatement st = dbConnection.prepareStatement(query);
 			ResultSet rs = null;
 			try
@@ -96,10 +99,12 @@ public class ListarVehiculosComprados extends JDialog {
 				table.setModel(DbUtils.resultSetToTableModel(rs));
 			}catch (SQLException e) {
 				// TODO: handle exception
-			}finally {
-				st.close();
-				rs.close();
+				e.printStackTrace();
 			}
+//			finally {
+//				st.close();
+//				rs.close();
+//			}
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
