@@ -178,7 +178,7 @@ public class AnunciosAdmin extends JDialog {
 	public static void load(Connection dbConnection)
 	{
 		String query ="select idAnuncio as 'Código del Anuncio', descripcion as 'Descripción', fechaInicio as 'Fecha de Inicio', fechaFin as 'Fecha de Baja', costo as 'Costo', "
-				+ "idVehiculo as 'Código del Vehículo', preciovehiculo as 'Precio del Vehículo', autorizado as 'Autorización' from Anuncio";
+				+ "idVehiculo as 'Código del Vehículo', preciovehiculo as 'Precio del Vehículo', autorizado as 'Autorización' from Anuncio where comprado = 0";
 		//table.setModel(new DefaultTableModel());
 		
 		try {

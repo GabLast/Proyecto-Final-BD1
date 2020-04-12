@@ -266,7 +266,7 @@ public class RegistrarVehiculo extends JDialog {
 								Vehiculo vehiculo = new Vehiculo(cbxEstado.getSelectedItem().toString(), Integer.valueOf(txtAnio.getText()), 
 										cbxTipoVehiculo.getSelectedIndex(), cbxMarca.getSelectedIndex(), idModelo, txtDescripcion.getText());
 								
-								String insert = String.format("exec registrarVehiculo @estado = '%s', @anio = '%d', @idMarca = '%d', @idModelo = '%d', @idTipoVehiculo = '%d', "
+								String insert = String.format("exec registrarVehiculo @estado = '%s', @anio = %d, @idMarca = '%d', @idModelo = '%d', @idTipoVehiculo = '%d', "
 										+ "@descripcion = '%s', @idVendedor = '%d'", vehiculo.getEstado(), vehiculo.getAnio(), vehiculo.getIdMarca(), vehiculo.getIdModelo(),
 										vehiculo.getIdTipoVehiculo(), vehiculo.getDescripcion(), idVendedor);
 								
