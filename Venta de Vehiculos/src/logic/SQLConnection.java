@@ -14,7 +14,7 @@ public class SQLConnection {
 
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-			String dbURL = "jdbc:sqlserver://10.0.0.6;databaseName=VentaVehiculos;user=project;password=123";
+			String dbURL = "jdbc:sqlserver://10.0.0.16;databaseName=VentaVehiculos;user=project;password=123";
 
 			dbSQL = DriverManager.getConnection(dbURL);
 
