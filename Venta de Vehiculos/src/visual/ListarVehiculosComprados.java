@@ -38,7 +38,7 @@ public class ListarVehiculosComprados extends JDialog {
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		setTitle("Veh\u00EDculos Disponibles");
+		setTitle("Veh\u00EDculos Comprados");
 		setBounds(100, 100, 800, 567);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -47,7 +47,7 @@ public class ListarVehiculosComprados extends JDialog {
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
 			JPanel panel = new JPanel();
-			panel.setBorder(new TitledBorder(null, "Listado de Anuncios", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panel.setBorder(new TitledBorder(null, "Listado de Vehículos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			contentPanel.add(panel, BorderLayout.CENTER);
 			panel.setLayout(new BorderLayout(0, 0));
 			{
