@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,7 +11,6 @@ import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -25,20 +22,18 @@ import javax.swing.border.TitledBorder;
 import logic.SQLConnection;
 import net.proteanit.sql.DbUtils;
 
-public class ListarVehiculosComprados extends JDialog {
+public class ListarVentasVendedor extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private static JTable table;
-	/**
-	 * Create the dialog.
-	 */
-	public ListarVehiculosComprados(Connection dbConnection, long idCliente) {
+
+	public ListarVentasVendedor(Connection dbConnection, long idVendedor) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		setTitle("Veh\u00EDculos Disponibles");
+		setTitle("Ventas Realizadas ");
 		setBounds(100, 100, 800, 567);
 		setLocationRelativeTo(null);
 		getContentPane().setLayout(new BorderLayout());
@@ -47,7 +42,7 @@ public class ListarVehiculosComprados extends JDialog {
 		contentPanel.setLayout(new BorderLayout(0, 0));
 		{
 			JPanel panel = new JPanel();
-			panel.setBorder(new TitledBorder(null, "Listado de Anuncios", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+			panel.setBorder(new TitledBorder(null, "Listado vehículos vendidos", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 			contentPanel.add(panel, BorderLayout.CENTER);
 			panel.setLayout(new BorderLayout(0, 0));
 			{
@@ -57,7 +52,7 @@ public class ListarVehiculosComprados extends JDialog {
 					table = new JTable();				
 					table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-					load(dbConnection, idCliente);
+					load(dbConnection, idVendedor);
 					scrollPane.setViewportView(table);
 				}
 			}
@@ -86,7 +81,7 @@ public class ListarVehiculosComprados extends JDialog {
 		table.getTableHeader().setReorderingAllowed(false);
 		
 		
-		String query = String.format("select * from comprasCliente(%d)", id); //sp
+		String query = String.format("select * from ventasVendedor(%d)", id); //sp
 		
 		try {
 			if(dbConnection.isClosed())

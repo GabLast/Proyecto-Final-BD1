@@ -48,18 +48,21 @@ public class RegistroUser extends JDialog {
 	private JLabel lblEmail;
 	private JTextField txtMail;
 	private JFormattedTextField txtNumber1;
+	Connection dbConnection = null;
 	/**
 	 * Launch the application.
 	 */
 	/**
 	 * Create the frame.
 	 */
-	public RegistroUser(Connection dbConnection) {
+	public RegistroUser(Connection z) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		
+		dbConnection = SQLConnection.connect();
 		setTitle("Registrando un nuevo usuario");
 		setBounds(100, 100, 380, 623);
 		setResizable(false);

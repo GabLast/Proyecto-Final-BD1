@@ -128,6 +128,17 @@ public class MainVendedor extends JFrame {
 		
 		JMenuItem mntmListadoDeAnuncios = new JMenuItem("Mis Anuncios Publicados");
 		mnNewMenu.add(mntmListadoDeAnuncios);
+		
+		JMenu mnGestinDeVentas = new JMenu("Gesti\u00F3n de Ventas");
+		menuBar.add(mnGestinDeVentas);
+		
+		JMenuItem mntmVentasRealizadas = new JMenuItem("Ventas Realizadas");
+		mntmVentasRealizadas.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				new ListarVentasVendedor(dbConnection, idVendedor).setVisible(true);
+			}
+		});
+		mnGestinDeVentas.add(mntmVentasRealizadas);
 		mntmListadoDeAnuncios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				new ListarAnuncios(dbConnection, idVendedor).setVisible(true);

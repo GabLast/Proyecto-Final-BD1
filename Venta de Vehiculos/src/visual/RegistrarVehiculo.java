@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import logic.SQLConnection;
 import logic.Vehiculo;
 
 import javax.swing.JLabel;
@@ -41,16 +42,18 @@ public class RegistrarVehiculo extends JDialog {
 	JTextArea txtDescripcion;
 	JComboBox cbxEstado;
 	int idModelo = -1;
+	Connection dbConnection = null;
 
 	/**
 	 * Create the dialog.
 	 */
-	public RegistrarVehiculo(Connection dbConnection, int idVendedor) {
+	public RegistrarVehiculo(Connection z, int idVendedor) {
 		try {
 			UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
+		dbConnection = SQLConnection.connect();
 		setTitle("Registrando un Veh\u00EDculo");
 		setBounds(100, 100, 445, 446);
 		setLocationRelativeTo(null);
